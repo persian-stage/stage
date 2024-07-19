@@ -1,18 +1,22 @@
 package amirhs.de.stage.auth;
 
-import lombok.RequiredArgsConstructor;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")
-@RequiredArgsConstructor
 public class AuthenticationController {
 
     private final AuthenticationService authService;
+
+    public AuthenticationController(AuthenticationService authService) {
+        this.authService = authService;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
@@ -22,10 +26,52 @@ public class AuthenticationController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> register(
+    public ResponseEntity<Map<String, String>> authenticate(
             @RequestBody AuthenticationRequest request
     ) {
-        return ResponseEntity.ok(authService.authenticate(request));
+        AuthenticationResponse res = authService.authenticate(request);
+        ResponseCookie cookie = ResponseCookie.from("token", res.getToken())
+                .httpOnly(true)
+                .secure(false) // todo set condition for dev and prod value
+                .path("/api")
+                .maxAge(7 * 23 * 60 * 60) // Less than 1 week
+                .sameSite("Strict")
+                .build();
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Login successful");
+
+        return ResponseEntity.ok()
+                .header("Set-Cookie", cookie.toString())
+                .body(response);
     }
+
+    @GetMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout(
+            HttpServletRequest httpServletRequest
+    ) {
+
+        System.out.println("Test Logout!!!");
+
+        authService.invalidateToken(httpServletRequest);
+
+        // Remove the cookie by setting maxAge to 0
+        ResponseCookie cookie = ResponseCookie.from("token", "")
+                .httpOnly(true)
+                .secure(false) // todo set condition for dev and prod value
+                .path("/api")
+                .maxAge(0) // Set maxAge to 0 to delete the cookie
+                .sameSite("Strict")
+                .build();
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Logout successful");
+        response.put("path", "/");
+
+        return ResponseEntity.ok()
+                .header("Set-Cookie", cookie.toString())
+                .body(response);
+    }
+
 
 }

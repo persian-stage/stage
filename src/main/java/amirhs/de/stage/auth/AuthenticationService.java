@@ -1,23 +1,32 @@
 package amirhs.de.stage.auth;
 
+import amirhs.de.stage.config.CookieHandler;
 import amirhs.de.stage.config.JwtService;
 import amirhs.de.stage.user.Role;
 import amirhs.de.stage.user.User;
 import amirhs.de.stage.user.UserRepository;
-import lombok.RequiredArgsConstructor;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class AuthenticationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final CookieHandler cookieHandler;
+
+    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager, CookieHandler cookieHandler) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+        this.cookieHandler = cookieHandler;
+    }
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
@@ -45,5 +54,11 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+
+    public void invalidateToken(HttpServletRequest request) {
+        final String jwt = cookieHandler.getJwtFromCookies(request);
+        if (jwt == null) return;
+        jwtService.invalidateToken(jwt);
     }
 }
