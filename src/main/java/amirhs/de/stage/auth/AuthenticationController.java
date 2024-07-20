@@ -33,13 +33,14 @@ public class AuthenticationController {
         ResponseCookie cookie = ResponseCookie.from("token", res.getToken())
                 .httpOnly(true)
                 .secure(false) // todo set condition for dev and prod value
-                .path("/api")
+                .path("/")
                 .maxAge(7 * 23 * 60 * 60) // Less than 1 week
                 .sameSite("Strict")
                 .build();
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "Login successful");
+        response.put("loggedIn", "true");
 
         return ResponseEntity.ok()
                 .header("Set-Cookie", cookie.toString())
@@ -59,7 +60,7 @@ public class AuthenticationController {
         ResponseCookie cookie = ResponseCookie.from("token", "")
                 .httpOnly(true)
                 .secure(false) // todo set condition for dev and prod value
-                .path("/api")
+                .path("/")
                 .maxAge(0) // Set maxAge to 0 to delete the cookie
                 .sameSite("Strict")
                 .build();
