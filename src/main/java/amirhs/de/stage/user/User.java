@@ -19,6 +19,7 @@ public class User implements UserDetails {
     private String lastname;
     private String email;
     private String password;
+    private String image;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -168,6 +169,14 @@ public class User implements UserDetails {
 
     public String toString() {
         return "User(id=" + this.getId() + ", firstname=" + this.getFirstname() + ", lastname=" + this.getLastname() + ", email=" + this.getEmail() + ", password=" + this.getPassword() + ", role=" + this.getRole() + ")";
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public static class UserBuilder {

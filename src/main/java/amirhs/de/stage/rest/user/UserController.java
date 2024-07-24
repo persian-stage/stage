@@ -1,10 +1,8 @@
-package amirhs.de.stage.rest;
+package amirhs.de.stage.rest.user;
 
 import amirhs.de.stage.user.User;
 import amirhs.de.stage.util.UserContextHolder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,17 +11,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/admin")
-public class IndexController {
+@RequestMapping("/api/v1/user")
+public class UserController {
 
-    @GetMapping("/index")
-    public ResponseEntity<Map<String, String>> indexAction() {
+    @GetMapping("/")
+    public ResponseEntity<Map<String, String>> getUser() {
 
-        String email = UserContextHolder.getCurrentUsername();
+            User user = UserContextHolder.getCurrentUser();
 
         Map<String, String> response = new HashMap<>();
-        response.put("message", "User email: " + email);
-        response.put("path", "/");
+        response.put("id", user.getId() + "");
+        response.put("firstname", user.getFirstname());
+        response.put("lastname", user.getLastname());
+        response.put("email", user.getEmail());
+        response.put("avatar", user.getImage());
 
         return ResponseEntity.ok().body(response);
     }

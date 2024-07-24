@@ -1,5 +1,6 @@
 package amirhs.de.stage.auth;
 
+import amirhs.de.stage.util.UserContextHolder;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +39,12 @@ public class AuthenticationController {
                 .sameSite("Strict")
                 .build();
 
+        String email = UserContextHolder.getCurrentUsername();
+
         Map<String, String> response = new HashMap<>();
         response.put("message", "Login successful");
         response.put("loggedIn", "true");
+        response.put("email", email);
 
         return ResponseEntity.ok()
                 .header("Set-Cookie", cookie.toString())
