@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/stage
+    username: stage
+    password: X7#j2kPq9tMv
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+server:
+  port: 8081
+
+logging:
+  level:
+    org.springframework.web: INFO
+    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
