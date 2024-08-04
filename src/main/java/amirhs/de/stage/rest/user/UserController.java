@@ -1,32 +1,30 @@
 package amirhs.de.stage.rest.user;
 
-import amirhs.de.stage.user.User;
-import amirhs.de.stage.util.UserContextHolder;
+import amirhs.de.stage.dto.UserDTO;
+import amirhs.de.stage.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {
 
+    UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping("/")
-    public ResponseEntity<Map<String, String>> getUser() {
-
-            User user = UserContextHolder.getCurrentUser();
-
-        Map<String, String> response = new HashMap<>();
-        response.put("id", user.getId() + "");
-        response.put("firstname", user.getFirstname());
-        response.put("lastname", user.getLastname());
-        response.put("email", user.getEmail());
-        response.put("avatar", user.getImage());
-
-        return ResponseEntity.ok().body(response);
+    public ResponseEntity<UserDTO> getUser(@AuthenticationPrincipal UserDetails user) {
+        Optional<UserDTO> currentUser = userService.getUser(user.getUsername());
+        return currentUser.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }
