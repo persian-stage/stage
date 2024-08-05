@@ -55,12 +55,8 @@ public class AuthenticationController {
     public ResponseEntity<Map<String, String>> logout(
             HttpServletRequest httpServletRequest
     ) {
-
-        System.out.println("Test Logout!!!");
-
         authService.invalidateToken(httpServletRequest);
 
-        // Remove the cookie by setting maxAge to 0
         ResponseCookie cookie = ResponseCookie.from("token", "")
                 .httpOnly(true)
                 .secure(false) // todo set condition for dev and prod value
