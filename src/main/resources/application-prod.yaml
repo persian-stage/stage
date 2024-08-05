@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/stage
-    username: stage
-    password: X7#j2kPq9tMv
+    url: ${SPRING_DATASOURCE_URL:default}
+    username: ${SPRING_DATASOURCE_USERNAME:default}
+    password: ${SPRING_DATASOURCE_PASSWORD:default}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -15,8 +15,9 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   data:
     redis:
-      host: localhost
-      port: 6379
+      database: 0
+      host: ${SPRING_REDIS_HOST:redis_container}
+      port: ${SPRING_REDIS_PORT:6379}
 
 server:
   port: 8081
