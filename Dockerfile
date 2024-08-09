@@ -21,3 +21,4 @@ ENV SPRING_PROFILES_ACTIVE=prod
 EXPOSE 8081
 
 ENTRYPOINT ["java", "-jar", "stage.jar"]
+
