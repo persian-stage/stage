@@ -16,8 +16,8 @@ spring:
   data:
     redis:
       database: 0
-      host: ${SPRING_REDIS_HOST:redis_container}
-      port: ${SPRING_REDIS_PORT:6379}
+      host: redis_container
+      port: 6379
 
 server:
   port: 8081
