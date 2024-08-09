@@ -11,7 +11,8 @@ services:
     ports:
       - "5433:5432"
     networks:
-      - stage_network
+      - network
+    restart: always
 
   redis:
     image: redis:latest
@@ -19,7 +20,19 @@ services:
     ports:
       - "6377:6379"
     networks:
-      - stage_network
+      - network
+    restart: always
+
+  stage-nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    container_name: stage-nginx
+    ports:
+      - "80:80"
+    networks:
+      - network
+    restart: always
 
   springboot:
     build:
@@ -39,11 +52,12 @@ services:
       - postgres
       - redis
     networks:
-      - stage_network
+      - network
+    restart: always
 
 volumes:
   postgres_data:
 
 networks:
-  stage_network:
+  network:
     driver: bridge
