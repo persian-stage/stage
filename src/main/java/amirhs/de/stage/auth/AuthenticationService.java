@@ -41,8 +41,6 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .build();
-        List<App> datingApp = List.of(new App("dating", user));
-        user.setApps(datingApp);
 
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
