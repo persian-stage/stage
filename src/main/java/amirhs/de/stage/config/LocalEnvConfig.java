@@ -10,10 +10,7 @@ import org.springframework.context.annotation.Profile;
 public class LocalEnvConfig {
 
     @Bean
-    public void loadDotenv() {
-        Dotenv dotenv = Dotenv.load();
-        dotenv.entries().forEach(entry ->
-                System.setProperty(entry.getKey(), entry.getValue())
-        );
+    public Dotenv loadDotenv() {
+        return Dotenv.configure().directory("/app").load();
     }
 }

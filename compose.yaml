@@ -37,21 +37,27 @@ services:
   springboot:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_dev
     container_name: stage_container
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: local
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
     ports:
       - "8081:8081"
+    volumes:
+      - ./src:/app/src
+      - ./pom.xml:/app/pom.xml
+      - ~/.m2:/root/.m2  # Cache Maven dependencies
     depends_on:
       - postgres
       - redis
     networks:
       - network
     restart: always
+    command: mvn clean package -DskipTests && java -jar /app/target/stage-0.0.1-SNAPSHOT.jar
 
 volumes:
   postgres_data:

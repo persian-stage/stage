@@ -22,7 +22,8 @@ public class JwtService {
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
-    public static final String JWT_SECRET_KEY = System.getProperty("JWT_SECRET_KEY");
+
+    public static final String JWT_SECRET_KEY =  System.getenv("JWT_SECRET_KEY");
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
