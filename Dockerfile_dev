@@ -4,9 +4,14 @@ WORKDIR /app
 
 COPY . .
 
+COPY target/stage-*-SNAPSHOT.jar /app/stage.jar
+
+
 ENV SPRING_PROFILES_ACTIVE=local
+
 
 EXPOSE 8081
 
-CMD ["mvn", "clean", "spring-boot:run"]
+ENTRYPOINT ["java", "-jar", "stage.jar"]
+#CMD ["mvn", "clean", "spring-boot:run"]
 
