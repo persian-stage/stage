@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-COPY target/stage-*-SNAPSHOT.jar /app/stage.jar
+COPY target/stage-*.jar /app/stage.jar
 
 
 ENV SPRING_PROFILES_ACTIVE=local
