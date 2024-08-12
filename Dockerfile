@@ -14,7 +14,7 @@ WORKDIR /app
 
 RUN apk add --no-cache postgresql-client
 
-COPY --from=build /app/target/stage-*-SNAPSHOT.jar /app/stage.jar
+COPY --from=build /app/target/stage-*.jar /app/stage.jar
 
 ENV SPRING_PROFILES_ACTIVE=prod
 
