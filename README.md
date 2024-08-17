@@ -24,13 +24,18 @@ docker compose -p stage up -d
 2. Remove the entire containers ( Backend ):
 
 ```sh
-docker compose -p stage down
+docker compose down
 ```
 
 3. Remove the entire containers ( Backend and Frontend ):
 
 ```sh
 docker compose -p stage down
+```
+4. Build and run Stage Container:
+
+```sh
+docker compose up -d --build --no-deps springboot 
 ```
 
 ## Usage

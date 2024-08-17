@@ -1,17 +1,28 @@
+FROM maven:3.9.1-eclipse-temurin-17-alpine AS build
+
+WORKDIR /app
+
+# Copy the pom.xml and download dependencies
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Copy the source code and build the application
+COPY src ./src
+COPY .env .env
+RUN mvn clean package -DskipTests
+
+# Second stage: Run the application
 FROM maven:3.9.1-eclipse-temurin-17-alpine
 
 WORKDIR /app
 
-COPY . .
-
-COPY target/stage-*.jar /app/stage.jar
-
+# Copy the built jar from the first stage
+COPY --from=build /app/target/stage-*.jar /app/stage.jar
+COPY --from=build /app/.env /app/.env
 
 ENV SPRING_PROFILES_ACTIVE=local
 
-
 EXPOSE 8081
 
-ENTRYPOINT ["java", "-jar", "stage.jar"]
-#CMD ["mvn", "clean", "spring-boot:run"]
-
+# Use mvn clean spring-boot:run for local development
+CMD ["mvn", "clean", "spring-boot:run"]
