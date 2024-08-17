@@ -1,0 +1,34 @@
+# curl --location 'http://amirhs.test/api/v1/auth/authenticate'
+#--header 'Content-Type: application/json'
+#--header 'Cookie: token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbWlyMkBnbWFpbC5jb20iLCJpYXQiOjE3MjM4Nzk4NzQsImV4cCI6MTcyNDQ4NDY3NH0.uXG3Qjs-qYrvHnnR_nRE6PCqeFFphSKBZgaOc-lGW88' \
+POST http://amirhs.test/api/v1/auth/authenticate
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "1234"
+}
+
+###
+
+# curl --location 'http://amirhs.de:8081/api/v1/auth/register'
+#--header 'Content-Type: application/json'
+#--data-raw '{
+#    "firstname": "John",
+#    "lastname": "Doe",
+#    "email": "john@gmail.com",
+#    "password": "1234"
+#}'
+POST http://amirhs.de:8081/api/v1/auth/register
+Content-Type: application/json
+
+{
+  "firstname": "John",
+  "lastname": "Doe",
+  "email": "john@gmail.com",
+  "password": "1234"
+}
+
+###
+
+

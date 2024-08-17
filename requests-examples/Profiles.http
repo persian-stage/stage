@@ -1,0 +1,9 @@
+# curl --location 'http://amirhs.test/api/v1/auth/authenticate'
+#--header 'Content-Type: application/json'
+
+GET http://amirhs.test/api/v1/profiles/
+Cookie: token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbWlyMkBnbWFpbC5jb20iLCJpYXQiOjE3MjM4ODIxMTUsImV4cCI6MTcyNDQ4NjkxNX0.TXs5CMP6Yljo8nT-S55XrqFuZFoV2QVa6wcVBaDJFqw; Path=/; Max-Age=579600; Expires=Sat, 24 Aug 2024 01:08:35 GMT; HttpOnly; SameSite=Strict
+Content-Type: application/json
+
+<> 2024-08-17T134221.200.json
+###

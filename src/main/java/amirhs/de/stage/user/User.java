@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import amirhs.de.stage.apps.profiles.entity.Profile;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,15 +19,34 @@ public class User implements UserDetails {
     private Integer id;
     private String firstname;
     private String lastname;
+    private String gender;
     private String email;
     private String password;
     private String image;
+    private String country;
+    private String city;
+
+    private String username;
+
+    @Embedded
+    private DateOfBirth dateOfBirth;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<App> apps = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Profile profile;
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
 
     public User(Integer id, String firstname, String lastname, String email, String password, Role role) {
         this.id = id;
@@ -57,6 +77,10 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -141,6 +165,38 @@ public class User implements UserDetails {
         app.setUser(null);
     }
 
+    public DateOfBirth getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(DateOfBirth dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     public boolean equals(final Object o) {
         if (o == this) return true;
         if (!(o instanceof User)) return false;
@@ -189,8 +245,25 @@ public class User implements UserDetails {
         return result;
     }
 
+    @Override
     public String toString() {
-        return "User(id=" + this.getId() + ", firstname=" + this.getFirstname() + ", lastname=" + this.getLastname() + ", email=" + this.getEmail() + ", password=" + this.getPassword() + ", role=" + this.getRole() + ")";
+        return "User{" +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", gender='" + gender + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", image='" + image + '\'' +
+                ", gender='" + gender + '\'' +
+                ", country='" + country + '\'' +
+                ", city='" + city + '\'' +
+                ", username='" + username + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", role=" + role +
+                ", apps=" + apps +
+                ", profile=" + profile +
+                '}';
     }
 
     public String getImage() {
@@ -246,8 +319,16 @@ public class User implements UserDetails {
             return new User(this.id, this.firstname, this.lastname, this.email, this.password, this.role);
         }
 
+        @Override
         public String toString() {
-            return "User.UserBuilder(id=" + this.id + ", firstname=" + this.firstname + ", lastname=" + this.lastname + ", email=" + this.email + ", password=" + this.password + ", role=" + this.role + ")";
+            return "UserBuilder{" +
+                    "id=" + id +
+                    ", firstname='" + firstname + '\'' +
+                    ", lastname='" + lastname + '\'' +
+                    ", email='" + email + '\'' +
+                    ", password='" + password + '\'' +
+                    ", role=" + role +
+                    '}';
         }
     }
 }
