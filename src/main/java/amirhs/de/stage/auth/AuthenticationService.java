@@ -2,7 +2,7 @@ package amirhs.de.stage.auth;
 
 import amirhs.de.stage.config.CookieHandler;
 import amirhs.de.stage.config.JwtService;
-import amirhs.de.stage.user.App;
+import amirhs.de.stage.common.ResponseErrorMessage;
 import amirhs.de.stage.user.Role;
 import amirhs.de.stage.user.User;
 import amirhs.de.stage.user.UserRepository;
@@ -32,7 +32,18 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse register(RegisterRequest request) {
-        // todo Check if Email exist
+
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            return AuthenticationResponse.builder()
+                    .errorMessages(
+                            List.of(ResponseErrorMessage.builder()
+                                    .form("register")
+                                    .field("email")
+                                    .message("Email already exists")
+                                    .buildWithFormAndField()))
+                    .build();
+        }
+
         // todo Check if Password is accepted
         var user = User.builder()
                 .firstname(request.getFirstname())

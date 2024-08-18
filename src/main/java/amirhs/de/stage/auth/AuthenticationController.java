@@ -26,6 +26,7 @@ public class AuthenticationController {
         return ResponseEntity.ok(authService.register(request));
     }
 
+    // TODO gic result auf service as AuthenticationResponse to body of ResponseEntity
     @PostMapping("/authenticate")
     public ResponseEntity<Map<String, String>> authenticate(
             @RequestBody AuthenticationRequest request

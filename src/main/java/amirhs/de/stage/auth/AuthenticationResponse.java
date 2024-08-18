@@ -1,12 +1,14 @@
 package amirhs.de.stage.auth;
 
+import amirhs.de.stage.common.ResponseErrorMessage;
+
+import java.util.List;
+import java.util.Objects;
+
 public class AuthenticationResponse {
 
     private String token;
-
-    public AuthenticationResponse(String token) {
-        this.token = token;
-    }
+    private List<ResponseErrorMessage> formErrors;
 
     public AuthenticationResponse() {
     }
@@ -23,53 +25,64 @@ public class AuthenticationResponse {
         this.token = token;
     }
 
-    public boolean equals(final Object o) {
-        if (o == this) return true;
-        if (!(o instanceof AuthenticationResponse)) return false;
-        final AuthenticationResponse other = (AuthenticationResponse) o;
-        if (!other.canEqual((Object) this)) return false;
-        final Object this$token = this.getToken();
-        final Object other$token = other.getToken();
-        if (this$token == null ? other$token != null : !this$token.equals(other$token)) return false;
-        return true;
+    public List<ResponseErrorMessage> getFormErrors() {
+        return formErrors;
     }
 
-    protected boolean canEqual(final Object other) {
-        return other instanceof AuthenticationResponse;
-    }
-
-    public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        final Object $token = this.getToken();
-        result = result * PRIME + ($token == null ? 43 : $token.hashCode());
-        return result;
+    public void setFormErrors(List<ResponseErrorMessage> errorMessage) {
+        this.formErrors = errorMessage;
     }
 
     @Override
     public String toString() {
         return "AuthenticationResponse{" +
                 "token='" + token + '\'' +
+                ", errorMessages=" + formErrors +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AuthenticationResponse that = (AuthenticationResponse) o;
+        return Objects.equals(token, that.token) && Objects.equals(formErrors, that.formErrors);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(token, formErrors);
     }
 
     public static class AuthenticationResponseBuilder {
         private String token;
+        private List<ResponseErrorMessage> errorMessages;
 
-        AuthenticationResponseBuilder() {
-        }
+        AuthenticationResponseBuilder() {}
 
         public AuthenticationResponseBuilder token(String token) {
             this.token = token;
             return this;
         }
 
-        public AuthenticationResponse build() {
-            return new AuthenticationResponse(this.token);
+        public AuthenticationResponseBuilder errorMessages(List<ResponseErrorMessage> errorMessages) {
+            this.errorMessages = errorMessages;
+            return this;
         }
 
+        public AuthenticationResponse build() {
+            AuthenticationResponse response = new AuthenticationResponse();
+            response.setToken(token);
+            response.setFormErrors(errorMessages);
+            return response;
+        }
+
+        @Override
         public String toString() {
-            return "AuthenticationResponse.AuthenticationResponseBuilder(token=" + this.token + ")";
+            return "AuthenticationResponseBuilder{" +
+                    "token='" + token + '\'' +
+                    ", errorMessages=" + errorMessages +
+                    '}';
         }
     }
 }
