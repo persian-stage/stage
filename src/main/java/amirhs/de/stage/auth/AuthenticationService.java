@@ -3,6 +3,7 @@ package amirhs.de.stage.auth;
 import amirhs.de.stage.config.CookieHandler;
 import amirhs.de.stage.config.JwtService;
 import amirhs.de.stage.common.ResponseErrorMessage;
+import amirhs.de.stage.service.ValidationService;
 import amirhs.de.stage.user.Role;
 import amirhs.de.stage.user.User;
 import amirhs.de.stage.user.UserRepository;
@@ -22,29 +23,33 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final CookieHandler cookieHandler;
+    private final ValidationService validationService;
 
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager, CookieHandler cookieHandler) {
+    public AuthenticationService(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            JwtService jwtService,
+            AuthenticationManager authenticationManager,
+            CookieHandler cookieHandler,
+            ValidationService validationService
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
         this.cookieHandler = cookieHandler;
+        this.validationService = validationService;
     }
 
     public AuthenticationResponse register(RegisterRequest request) {
 
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+        List<ResponseErrorMessage> errorMessages = validationService.validateRegisterRequest(request);
+        if (!errorMessages.isEmpty()) {
             return AuthenticationResponse.builder()
-                    .errorMessages(
-                            List.of(ResponseErrorMessage.builder()
-                                    .form("register")
-                                    .field("email")
-                                    .message("Email already exists")
-                                    .buildWithFormAndField()))
+                    .errorMessages(errorMessages)
                     .build();
         }
 
-        // todo Check if Password is accepted
         var user = User.builder()
                 .firstname(request.getFirstname())
                 .lastname(request.getLastname())

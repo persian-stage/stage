@@ -1,4 +1,4 @@
-package amirhs.de.stage.util;
+package amirhs.de.stage.utils;
 
 import amirhs.de.stage.user.User;
 import org.springframework.security.core.Authentication;

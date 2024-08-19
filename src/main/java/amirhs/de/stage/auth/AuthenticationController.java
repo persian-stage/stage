@@ -1,6 +1,6 @@
 package amirhs.de.stage.auth;
 
-import amirhs.de.stage.util.UserContextHolder;
+import amirhs.de.stage.utils.UserContextHolder;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
