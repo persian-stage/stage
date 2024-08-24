@@ -14,7 +14,7 @@ WORKDIR /app
 
 RUN apk add --no-cache --virtual .runtime-deps postgresql-client \
     && apk del --purge --no-cache .runtime-deps \
-    && rm -rf /var/cache/apk/* && apk del git
+    && rm -rf /var/cache/apk/*
 
 COPY --from=build /app/target/stage-*.jar /app/stage.jar
 
