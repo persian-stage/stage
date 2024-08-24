@@ -34,7 +34,7 @@ services:
       - network
     restart: always
 
-  springboot:
+  stage_container:
     build:
       context: .
       dockerfile: Dockerfile_dev
@@ -45,8 +45,14 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+      AWS_REGION: ${AWS_REGION}
+      AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
+      AWS_S3_END_POINT: ${AWS_S3_END_POINT}
     ports:
       - "8081:8081"
+      - "5005:5005"
     volumes:
       - ./src:/app/src
       - ./pom.xml:/app/pom.xml
@@ -55,7 +61,8 @@ services:
       - postgres
       - redis
     networks:
-      - network
+      network:
+        ipv4_address: 172.19.0.10
     restart: always
 
 volumes:

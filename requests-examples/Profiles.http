@@ -7,3 +7,18 @@ Content-Type: application/json
 
 <> 2024-08-17T134221.200.json
 ###
+
+# curl -X POST http://localhost:8081/api/v1/file/avatar
+#  -F "file=@/path/to/your/avatar.jpg"
+POST http://amirhs.test/api/v1/file/avatar
+Cookie: token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbWlyMkBnbWFpbC5jb20iLCJpYXQiOjE3MjM4ODIxMTUsImV4cCI6MTcyNDQ4NjkxNX0.TXs5CMP6Yljo8nT-S55XrqFuZFoV2QVa6wcVBaDJFqw; Path=/; Max-Age=579600; Expires=Sat, 24 Aug 2024 01:08:35 GMT; HttpOnly; SameSite=Strict
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="avatar.jpg"
+
+< /home/amir/Pictures/amirhs_avatar_123456.JPG
+--WebAppBoundary--
+
+###
+

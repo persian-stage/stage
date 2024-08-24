@@ -28,7 +28,8 @@ public class ValidationService {
         errorMessages.addAll(validateEmail(request.getEmail()));
         errorMessages.addAll(validateFirstname(request.getFirstname()));
         errorMessages.addAll(validateLastname(request.getLastname()));
-        errorMessages.addAll(validatePassword(request.getPassword()));
+        // TODO we should active this later
+//        errorMessages.addAll(validatePassword(request.getPassword()));
         errorMessages.addAll(validateEmailExists(request.getEmail()));
 
         return errorMessages;

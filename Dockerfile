@@ -12,7 +12,9 @@ FROM eclipse-temurin:17-jdk-alpine
 
 WORKDIR /app
 
-RUN apk add --no-cache postgresql-client
+RUN apk add --no-cache --virtual .runtime-deps postgresql-client \
+    && apk del --purge --no-cache .runtime-deps \
+    && rm -rf /var/cache/apk/* && apk del git
 
 COPY --from=build /app/target/stage-*.jar /app/stage.jar
 
@@ -21,4 +23,3 @@ ENV SPRING_PROFILES_ACTIVE=prod
 EXPOSE 8081
 
 ENTRYPOINT ["java", "-jar", "stage.jar"]
-

@@ -23,7 +23,21 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody RegisterRequest request
     ) {
-        return ResponseEntity.ok(authService.register(request));
+        AuthenticationResponse response = authService.register(request);
+        if (response.getFormErrors() != null && !response.getFormErrors().isEmpty()) {
+            return ResponseEntity.ok(response);
+        }
+        ResponseCookie cookie = ResponseCookie.from("token", response.getToken())
+                .httpOnly(true)
+                .secure(false) // todo set condition for dev and prod value
+                .path("/")
+                .maxAge(7 * 23 * 60 * 60) // Less than 1 week
+                .sameSite("Strict")
+                .build();
+
+        return ResponseEntity.ok()
+                .header("Set-Cookie", cookie.toString())
+                .body(response);
     }
 
     // TODO gic result auf service as AuthenticationResponse to body of ResponseEntity

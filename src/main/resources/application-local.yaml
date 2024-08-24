@@ -1,4 +1,8 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   datasource:
     url: ${SPRING_DATASOURCE_URL:default}
     username: ${SPRING_DATASOURCE_USERNAME:default}
@@ -11,6 +15,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        enable_lazy_load_no_trans=true: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   data:
@@ -18,6 +23,17 @@ spring:
       database: 0
       host: redis_container
       port: 6379
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID:default}
+      secret-key: ${AWS_SECRET_KEY:default}
+    region:
+      static: ${AWS_REGION:default}
+    s3:
+      bucket: ${AWS_BUCKET_NAME:default}
+      endpoint: ${AWS_S3_END_POINT:default}
 
 server:
   port: 8081

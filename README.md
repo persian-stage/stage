@@ -35,7 +35,13 @@ docker compose -p stage down
 4. Build and run Stage Container:
 
 ```sh
-docker compose up -d --build --no-deps springboot 
+docker compose up -d --build --no-deps stage_container 
+```
+
+5. Create and start the containers:
+
+```sh
+docker compose -p stage up -d --build
 ```
 
 ## Usage

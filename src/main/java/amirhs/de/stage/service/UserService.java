@@ -21,21 +21,9 @@ public class UserService {
         this.appRepository = appRepository;
     }
 
-    public Optional<UserDTO> getUser(String username) {
-        Optional<User> userOptional = userRepository.findByEmail(username);
-
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            UserDTO userDTO = new UserDTO();
-            userDTO.setFirstname(user.getFirstname());
-            userDTO.setLastname(user.getLastname());
-            userDTO.setEmail(user.getEmail());
-            userDTO.setAvatar(user.getImage());
-            userDTO.setRole(user.getRole());
-            return Optional.of(userDTO);
-        } else {
-            return Optional.empty();
-        }
+    public Optional<User> getUserWithEmail(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        return userOptional;
     }
 
     public User createUser(User user) {

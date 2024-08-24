@@ -22,8 +22,6 @@ public class IndexController {
         response.put("message", "User email: " + email);
         response.put("path", "/");
 
-        System.out.println("Test");
-
         return ResponseEntity.ok().body(response);
     }
 

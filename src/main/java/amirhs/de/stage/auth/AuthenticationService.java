@@ -46,7 +46,7 @@ public class AuthenticationService {
         List<ResponseErrorMessage> errorMessages = validationService.validateRegisterRequest(request);
         if (!errorMessages.isEmpty()) {
             return AuthenticationResponse.builder()
-                    .errorMessages(errorMessages)
+                    .formErrorMessages(errorMessages)
                     .build();
         }
 
@@ -60,7 +60,7 @@ public class AuthenticationService {
 
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        return AuthenticationResponse.builder().token(jwtToken).user(user).loggedIn(true).build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -70,11 +70,19 @@ public class AuthenticationService {
                         request.getPassword()
                 )
         );
-        var user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
+        User cloneUser = User.builder()
+                .id(user.getId())
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .email(user.getEmail())
+                .avatar(user.getAvatar())
+                .build();
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
+                .user(cloneUser)
                 .build();
     }
 

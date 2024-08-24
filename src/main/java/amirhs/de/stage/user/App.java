@@ -1,5 +1,6 @@
 package amirhs.de.stage.user;
 
+import amirhs.de.stage.apps.profiles.entity.Profile;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +15,10 @@ public class App {
     @ManyToOne
     @JoinColumn(name = "_user_id")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+    private Profile profile;
 
     // Constructors, getters, setters, equals, hashCode, toString methods
 
@@ -46,6 +51,14 @@ public class App {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     @Override

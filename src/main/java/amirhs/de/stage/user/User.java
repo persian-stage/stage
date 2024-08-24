@@ -1,5 +1,7 @@
 package amirhs.de.stage.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,8 +14,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "_user")
+@JsonIgnoreProperties({"apps"})
 public class User implements UserDetails {
-
     @Id
     @GeneratedValue
     private Integer id;
@@ -22,10 +24,9 @@ public class User implements UserDetails {
     private String gender;
     private String email;
     private String password;
-    private String image;
+    private String avatar;
     private String country;
     private String city;
-
     private String username;
 
     @Embedded
@@ -38,6 +39,7 @@ public class User implements UserDetails {
     private List<App> apps = new ArrayList<>();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private Profile profile;
 
     public Profile getProfile() {
@@ -48,13 +50,37 @@ public class User implements UserDetails {
         this.profile = profile;
     }
 
-    public User(Integer id, String firstname, String lastname, String email, String password, Role role) {
+    public User(
+            Integer id,
+            String firstname,
+            String lastname,
+            String email,
+            String password,
+            Role role
+    ) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
         this.role = role;
+    }
+
+    public User(
+            Integer id,
+            String firstname,
+            String lastname,
+            String email,
+            List<App> apps,
+            Profile profile,
+            String avatar) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.apps = apps;
+        this.profile = profile;
+        this.avatar = avatar;
     }
 
     public User() {
@@ -66,6 +92,9 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (role == null) {
+            return List.of();
+        }
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
@@ -254,7 +283,7 @@ public class User implements UserDetails {
                 ", gender='" + gender + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", image='" + image + '\'' +
+                ", avatar='" + avatar + '\'' +
                 ", gender='" + gender + '\'' +
                 ", country='" + country + '\'' +
                 ", city='" + city + '\'' +
@@ -266,12 +295,12 @@ public class User implements UserDetails {
                 '}';
     }
 
-    public String getImage() {
-        return image;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public static class UserBuilder {
@@ -281,6 +310,9 @@ public class User implements UserDetails {
         private String email;
         private String password;
         private Role role;
+        private List<App> apps;
+        private Profile profile;
+        private String avatar;
 
         UserBuilder() {
         }
@@ -315,8 +347,27 @@ public class User implements UserDetails {
             return this;
         }
 
+        public UserBuilder apps(List<App> apps) {
+            this.apps = apps;
+            return this;
+        }
+
+        public UserBuilder profile(Profile profile) {
+            this.profile = profile;
+            return this;
+        }
+
+        public UserBuilder avatar(String avatar) {
+            this.avatar = avatar;
+            return this;
+        }
+
         public User build() {
             return new User(this.id, this.firstname, this.lastname, this.email, this.password, this.role);
+        }
+
+        public User buildWithoutPassword() {
+            return new User(this.id, this.firstname, this.lastname, this.email, this.apps, this.profile, this.avatar);
         }
 
         @Override

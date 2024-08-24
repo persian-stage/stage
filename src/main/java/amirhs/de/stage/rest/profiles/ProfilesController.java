@@ -48,6 +48,36 @@ public class ProfilesController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/profileCards")
+    public ResponseEntity<Map<String, List<Map<String, Object>>>> getProfileCards(@AuthenticationPrincipal UserDetails user) {
+        List<App> apps = this.userService.getAppsByUser((User) user);
+        boolean hasProfilesApp =  apps.stream().anyMatch(app -> "profiles".equals(app.getName()));
+
+//        if (!hasProfilesApp) {
+//            Map<String, String> response = new HashMap<>();
+//            response.put("redirectUrl", "/register");
+//            response.put("status", HttpStatus.TEMPORARY_REDIRECT.value() + "");
+//            return ResponseEntity.ok(response);
+//        }
+
+        List<Profile> profiles = this.ProfileService.getAllProfiles();
+
+        List<Map<String, Object>> profileData = new ArrayList<>();
+        for (Profile profile : profiles) {
+            Map<String, Object> profileMap = new HashMap<>();
+            profileMap.put("profile", profile);
+            profileMap.put("user", profile.getUser());
+            profileMap.put("mediumImage", createMediumImageUrl(profile.getUser().getAvatar(), profile.getUser().getId()));
+            profileMap.put("apps", profile.getApps());
+            profileData.add(profileMap);
+        }
+
+        Map<String, List<Map<String, Object>>> response = new HashMap<>();
+        response.put("profiles", profileData);
+
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@RequestBody RegisterProfileRequest request, @AuthenticationPrincipal UserDetails user) {
         User currentUser = (User) user;
@@ -85,6 +115,11 @@ public class ProfilesController {
     private static @NotNull ResponseEntity<Map<String, String>> getRedirectResponse() {
         Map<String, String> response = new HashMap<>();
         response.put("redirectUrl", "/profiles");
-        return new ResponseEntity<>(response, HttpStatus.TEMPORARY_REDIRECT);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    private String createMediumImageUrl(String filename, int userId) {
+        return "https://stage-app-profiles-germany.s3.amazonaws.com/user/" + userId + "/avatar/medium/" + filename;
+    }
+
 }

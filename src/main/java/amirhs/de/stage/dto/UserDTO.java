@@ -3,11 +3,20 @@ package amirhs.de.stage.dto;
 import amirhs.de.stage.user.Role;
 
 public class UserDTO {
+    private Integer id;
     private String firstname;
     private String lastname;
     private String email;
     private String avatar;
     private Role role;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getFirstname() {
         return firstname;
