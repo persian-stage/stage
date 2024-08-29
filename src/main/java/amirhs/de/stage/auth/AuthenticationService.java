@@ -5,6 +5,7 @@ import amirhs.de.stage.config.JwtService;
 import amirhs.de.stage.common.ResponseErrorMessage;
 import amirhs.de.stage.service.ValidationService;
 import amirhs.de.stage.user.Role;
+import amirhs.de.stage.user.Status;
 import amirhs.de.stage.user.User;
 import amirhs.de.stage.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -56,6 +57,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
+                .status(Status.OFFLINE)
                 .build();
 
         userRepository.save(user);

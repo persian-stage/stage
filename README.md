@@ -44,6 +44,12 @@ docker compose up -d --build --no-deps stage_container
 docker compose -p stage up -d --build
 ```
 
+6. Build and run Stage Nginx:
+
+```sh
+docker compose up -d --build --no-deps stage-nginx 
+```
+
 ## Usage
 
 Once the containers are up and running, you can access the application and API endpoints as defined in your setup.

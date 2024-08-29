@@ -1,13 +1,13 @@
 package amirhs.de.stage.rest.user;
 
 import amirhs.de.stage.auth.AuthenticationResponse;
-import amirhs.de.stage.dto.UserDTO;
 import amirhs.de.stage.service.UserService;
 import amirhs.de.stage.user.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,6 +51,14 @@ public class UserController {
                 .build();
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
+
+        User user = userService.getUserById(id);
+
+        return ResponseEntity.ok().body(user);
     }
 
     private String createThumbnailUrl(String filename, int userId) {

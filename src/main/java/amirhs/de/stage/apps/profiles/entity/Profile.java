@@ -77,9 +77,9 @@ public class Profile {
 
     @Override
     public String toString() {
-        return "profile{" +
+        return "Profile{" +
                 "lookingForwardToGender='" + lookingForwardToGender + '\'' +
-                ", user=" + user +
+                ", userId=" + (user != null ? user.getId() : "null") +
                 '}';
     }
 
