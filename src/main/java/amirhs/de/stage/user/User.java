@@ -28,6 +28,7 @@ public class User implements UserDetails {
     private String country;
     private String city;
     private String username;
+    private Status status;
 
     @Embedded
     private DateOfBirth dateOfBirth;
@@ -56,7 +57,8 @@ public class User implements UserDetails {
             String lastname,
             String email,
             String password,
-            Role role
+            Role role,
+            Status status
     ) {
         this.id = id;
         this.firstname = firstname;
@@ -64,6 +66,7 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.status = status;
     }
 
     public User(
@@ -73,7 +76,9 @@ public class User implements UserDetails {
             String email,
             List<App> apps,
             Profile profile,
-            String avatar) {
+            String avatar,
+            Status status
+    ) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -81,6 +86,7 @@ public class User implements UserDetails {
         this.apps = apps;
         this.profile = profile;
         this.avatar = avatar;
+        this.status = status;
     }
 
     public User() {
@@ -226,6 +232,14 @@ public class User implements UserDetails {
         this.city = city;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public boolean equals(final Object o) {
         if (o == this) return true;
         if (!(o instanceof User)) return false;
@@ -288,10 +302,10 @@ public class User implements UserDetails {
                 ", country='" + country + '\'' +
                 ", city='" + city + '\'' +
                 ", username='" + username + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
+                ", dateOfBirth=" + (dateOfBirth != null ? dateOfBirth.toString() : "null") +
                 ", role=" + role +
                 ", apps=" + apps +
-                ", profile=" + profile +
+                ", profileId=" + (profile != null ? profile.getId() : "null") +
                 '}';
     }
 
@@ -313,6 +327,7 @@ public class User implements UserDetails {
         private List<App> apps;
         private Profile profile;
         private String avatar;
+        private Status status;
 
         UserBuilder() {
         }
@@ -362,12 +377,17 @@ public class User implements UserDetails {
             return this;
         }
 
+        public UserBuilder status(Status status) {
+            this.status = status;
+            return this;
+        }
+
         public User build() {
-            return new User(this.id, this.firstname, this.lastname, this.email, this.password, this.role);
+            return new User(this.id, this.firstname, this.lastname, this.email, this.password, this.role, this.status);
         }
 
         public User buildWithoutPassword() {
-            return new User(this.id, this.firstname, this.lastname, this.email, this.apps, this.profile, this.avatar);
+            return new User(this.id, this.firstname, this.lastname, this.email, this.apps, this.profile, this.avatar, this.status);
         }
 
         @Override
