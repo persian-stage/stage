@@ -29,6 +29,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         System.out.println("registerStompEndpoints");
         registry.addEndpoint("/ws")
                 .setAllowedOrigins("http://amirhs.test")
+                .setAllowedOrigins("*")
                 .withSockJS();
     }
 
