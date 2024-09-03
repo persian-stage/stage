@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>amirhs.de</groupId>
 	<artifactId>stage</artifactId>
-	<version>0.0.127</version>
+	<version>0.0.129</version>
 	<name>stage</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
