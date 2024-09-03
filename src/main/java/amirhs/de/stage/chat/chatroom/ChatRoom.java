@@ -18,6 +18,6 @@ public class ChatRoom {
     @GeneratedValue
     private Integer id;
     private String chatId;
-    private Integer senderId;
-    private Integer recipientId;
+    private String senderId;
+    private String recipientId;
 }

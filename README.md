@@ -35,8 +35,9 @@ docker compose -p stage down
 4. Build and run Stage Container:
 
 ```sh
-docker compose up -d --build --no-deps stage_container 
+docker compose up -d --build stage_container 
 ```
+[//]: # (--no-deps)
 
 5. Create and start the containers:
 
