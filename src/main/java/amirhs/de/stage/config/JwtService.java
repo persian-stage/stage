@@ -78,7 +78,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    private boolean isTokenBlacklisted(String token) {
+    public boolean isTokenBlacklisted(String token) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(token));
     }
 
