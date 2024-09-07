@@ -106,7 +106,6 @@ public class ProfilesController {
 
         Profile profile = new Profile();
         profile.setUser(currentUser);
-        profile.setLookingForwardToGender(request.getLookingForwardToGender());
         this.ProfileService.createProfile(profile);
 
         return getRedirectResponse();

@@ -20,8 +20,6 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String lookingForwardToGender;
-
     @OneToOne
     @JoinColumn(name = "_user_id", referencedColumnName = "id")
     @JsonBackReference
@@ -33,18 +31,10 @@ public class Profile {
 
     public void profile() {}
 
-    public void profile(String lookingForwardToGender, User user) {
-        this.lookingForwardToGender = lookingForwardToGender;
+    public void profile(User user) {
         this.user = user;
     }
 
-    public String getLookingForwardToGender() {
-        return lookingForwardToGender;
-    }
-
-    public void setLookingForwardToGender(String lookingForwardToGender) {
-        this.lookingForwardToGender = lookingForwardToGender;
-    }
 
     public User getUser() {
         return user;
@@ -67,18 +57,17 @@ public class Profile {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Profile profile = (Profile) o;
-        return Objects.equals(id, profile.id) && Objects.equals(lookingForwardToGender, profile.lookingForwardToGender) && Objects.equals(user, profile.user);
+        return Objects.equals(id, profile.id) && Objects.equals(user, profile.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, lookingForwardToGender, user);
+        return Objects.hash(id, user);
     }
 
     @Override
     public String toString() {
         return "Profile{" +
-                "lookingForwardToGender='" + lookingForwardToGender + '\'' +
                 ", userId=" + (user != null ? user.getId() : "null") +
                 '}';
     }

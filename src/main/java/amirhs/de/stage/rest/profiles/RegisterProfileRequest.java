@@ -4,7 +4,6 @@ import amirhs.de.stage.user.DateOfBirth;
 import java.util.List;
 
 public class RegisterProfileRequest {
-    private String lookingForwardToGender;
     private String gender;
     private DateOfBirth dateOfBirth;
     private String country;
@@ -12,13 +11,6 @@ public class RegisterProfileRequest {
     private String profileUsername;
     private List<String> errors;
 
-    public String getLookingForwardToGender() {
-        return lookingForwardToGender;
-    }
-
-    public void setLookingForwardToGender(String lookingForwardToGender) {
-        this.lookingForwardToGender = lookingForwardToGender;
-    }
 
     public DateOfBirth getDateOfBirth() {
         return dateOfBirth;
