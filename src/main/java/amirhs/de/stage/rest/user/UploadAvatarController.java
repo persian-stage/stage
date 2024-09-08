@@ -6,6 +6,7 @@ import amirhs.de.stage.service.aws.StorageService;
 import amirhs.de.stage.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,7 +26,7 @@ public class UploadAvatarController {
     private final StorageService storageService;
     private final UserService userService;
 
-    public UploadAvatarController(StorageService storageService, UserService userService) {
+    public UploadAvatarController(@Qualifier("s3StorageService") StorageService storageService, UserService userService) {
         this.storageService = storageService;
         this.userService = userService;
     }

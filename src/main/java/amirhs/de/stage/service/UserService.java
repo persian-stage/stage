@@ -1,13 +1,17 @@
 package amirhs.de.stage.service;
 
+import amirhs.de.stage.service.aws.S3StorageServiceV2;
+import amirhs.de.stage.service.aws.StorageService;
 import amirhs.de.stage.user.App;
 import amirhs.de.stage.user.AppRepository;
 import amirhs.de.stage.user.User;
 import amirhs.de.stage.user.UserRepository;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import amirhs.de.stage.user.Status;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,10 +20,14 @@ public class UserService {
 
     private UserRepository userRepository;
     private final AppRepository appRepository;
+    private final StorageService storageService;
+    private final S3StorageServiceV2 s3StorageServiceV2;
 
-    public UserService(UserRepository userRepository, AppRepository appRepository) {
+    public UserService(UserRepository userRepository, AppRepository appRepository, @Qualifier("s3StorageService") StorageService storageService, S3StorageServiceV2 s3StorageServiceV2) {
         this.userRepository = userRepository;
         this.appRepository = appRepository;
+        this.storageService = storageService;
+        this.s3StorageServiceV2 = s3StorageServiceV2;
     }
 
     @Transactional
@@ -38,8 +46,19 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(Integer userId) {
+    public void deleteUserById(Integer userId) {
         userRepository.deleteById(userId);
+    }
+
+    @Transactional
+    public boolean deleteUser(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow();
+        if (s3StorageServiceV2.deleteDirectoryRecursively("user/" + user.getId() + "/")) {
+            userRepository.delete(user);
+        } else {
+            return false;
+        }
+        return true;
     }
 
     @Transactional
