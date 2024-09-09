@@ -50,10 +50,20 @@ public class ProfilesController {
 
     @GetMapping("/profileCards")
     public ResponseEntity<Map<String, List<Map<String, Object>>>> getProfileCards(@AuthenticationPrincipal UserDetails user) {
+        Optional<User> currentUser = userService.getUserWithEmail(user.getUsername());
+
+        int userId;
+
+        if(currentUser.isPresent()) {
+            userId = currentUser.get().getId();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
         List<App> apps = this.userService.getAppsByUser((User) user);
         boolean hasProfilesApp =  apps.stream().anyMatch(app -> "profiles".equals(app.getName()));
 
-//        if (!hasProfilesApp) {
+//        if (!hasProfilesApp || currentUser.isEmpty()) {
 //            Map<String, String> response = new HashMap<>();
 //            response.put("redirectUrl", "/register");
 //            response.put("status", HttpStatus.TEMPORARY_REDIRECT.value() + "");
@@ -64,6 +74,8 @@ public class ProfilesController {
 
         List<Map<String, Object>> profileData = new ArrayList<>();
         for (Profile profile : profiles) {
+            if (profile.getUser().getId().equals(userId))
+                continue;
             Map<String, Object> profileMap = new HashMap<>();
             profileMap.put("profile", profile);
             profileMap.put("user", profile.getUser());

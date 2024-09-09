@@ -2,6 +2,7 @@ package amirhs.de.stage.rest.user;
 
 import amirhs.de.stage.common.ResponseWrapper;
 import amirhs.de.stage.service.UserService;
+import amirhs.de.stage.service.aws.S3StorageServiceV2;
 import amirhs.de.stage.service.aws.StorageService;
 import amirhs.de.stage.user.User;
 import org.apache.logging.log4j.LogManager;
@@ -25,10 +26,12 @@ public class UploadAvatarController {
 
     private final StorageService storageService;
     private final UserService userService;
+    private final S3StorageServiceV2 s3StorageServiceV2;
 
-    public UploadAvatarController(@Qualifier("s3StorageService") StorageService storageService, UserService userService) {
+    public UploadAvatarController(@Qualifier("s3StorageService") StorageService storageService, UserService userService, S3StorageServiceV2 s3StorageServiceV2) {
         this.storageService = storageService;
         this.userService = userService;
+        this.s3StorageServiceV2 = s3StorageServiceV2;
     }
 
     @PostMapping("/avatar")
@@ -48,6 +51,11 @@ public class UploadAvatarController {
             return ResponseEntity.ok(response);
         }
 
+        String avatarName = currentUser.get().getAvatar();
+        if (avatarName != null && !avatarName.isEmpty()) {
+            s3StorageServiceV2.deleteDirectoryRecursively("user/" + currentUser.get().getId() + "/avatar/");
+        }
+
         String url = storageService.uploadFile(String.valueOf(currentUser.get().getId()), file);
 
         String filename = extractFilename(url);
@@ -60,6 +68,38 @@ public class UploadAvatarController {
         ResponseWrapper response = new ResponseWrapper()
                 .add("redirectUrl", "/profiles")
                 .add("avatarUrl", user.getAvatar())
+                .add("status", HttpStatus.OK.value() + "");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/delete-avatar")
+    public ResponseEntity<ResponseWrapper> deleteAvatar(
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        Optional<User> currentUser = userService.getUserWithEmail(userDetails.getUsername());
+
+        logger.info("File Upload started: {}", userDetails.getUsername());
+
+        if (currentUser.isEmpty()) {
+            logger.warn("User not found: {}", userDetails.getUsername());
+            ResponseWrapper response = new ResponseWrapper()
+                    .add("redirectUrl", "/login")
+                    .add("status", HttpStatus.FORBIDDEN.value() + "");
+            return ResponseEntity.ok(response);
+        }
+
+        String avatarName = currentUser.get().getAvatar();
+        if (avatarName != null && !avatarName.isEmpty()) {
+            s3StorageServiceV2.deleteDirectoryRecursively("user/" + currentUser.get().getId() + "/avatar/");
+        }
+
+        User user = currentUser.get();
+        user.setAvatar("");
+
+        userService.updateUser(user);
+
+        ResponseWrapper response = new ResponseWrapper()
+                .add("redirectUrl", "/profiles")
                 .add("status", HttpStatus.OK.value() + "");
         return ResponseEntity.ok(response);
     }
