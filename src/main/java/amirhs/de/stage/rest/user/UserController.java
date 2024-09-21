@@ -45,6 +45,7 @@ public class UserController {
                 .email(user.getEmail())
                 .avatar(createThumbnailUrl(user.getAvatar(), user.getId()))
                 .apps(user.getApps())
+                .gender(user.getGender())
                 .buildWithoutPassword();
 
         AuthenticationResponse response = AuthenticationResponse.builder()

@@ -58,7 +58,8 @@ public class User implements UserDetails {
             String email,
             String password,
             Role role,
-            Status status
+            Status status,
+            String gender
     ) {
         this.id = id;
         this.firstname = firstname;
@@ -67,6 +68,7 @@ public class User implements UserDetails {
         this.password = password;
         this.role = role;
         this.status = status;
+        this.gender = gender;
     }
 
     public User(
@@ -328,6 +330,7 @@ public class User implements UserDetails {
         private Profile profile;
         private String avatar;
         private Status status;
+        private String gender;
 
         UserBuilder() {
         }
@@ -382,8 +385,13 @@ public class User implements UserDetails {
             return this;
         }
 
+        public UserBuilder gender(String gender) {
+            this.gender = gender;
+            return this;
+        }
+
         public User build() {
-            return new User(this.id, this.firstname, this.lastname, this.email, this.password, this.role, this.status);
+            return new User(this.id, this.firstname, this.lastname, this.email, this.password, this.role, this.status, this.gender);
         }
 
         public User buildWithoutPassword() {

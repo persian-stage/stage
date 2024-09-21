@@ -29,6 +29,10 @@ public class Profile {
     @JsonManagedReference
     private List<App> apps = new ArrayList<>();
 
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Image> images = new ArrayList<>();
+
     public void profile() {}
 
     public void profile(User user) {
@@ -50,6 +54,24 @@ public class Profile {
 
     public void setApps(List<App> apps) {
         this.apps = apps;
+    }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+
+    public void addImage(Image image) {
+        images.add(image);
+        image.setProfile(this);
+    }
+
+    public void removeImage(Image image) {
+        images.remove(image);
+        image.setProfile(null);
     }
 
     @Override

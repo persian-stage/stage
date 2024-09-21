@@ -58,6 +58,21 @@ public class S3StorageServiceV2 implements StorageService {
         return s3Client.utilities().getUrl(GetUrlRequest.builder().bucket(bucketName).key(originalFileName).build()).toString();
     }
 
+    public String uploadImage(String userId, MultipartFile file) throws IOException {
+        if (userId == null || userId.isEmpty()) {
+            throw new IllegalArgumentException("User ID cannot be null or empty");
+        }
+
+        String baseFileName = generateFileName(file.getOriginalFilename());
+        String format = "jpg";
+
+        String originalFileName = "user/" + userId + "/images/original/" + baseFileName + "." + format;
+        byte[] originalBytes = convertImageFormat(file, format, -1, -1); // -1 means no resizing
+        uploadToS3(originalFileName, originalBytes, format);
+
+        return s3Client.utilities().getUrl(GetUrlRequest.builder().bucket(bucketName).key(originalFileName).build()).toString();
+    }
+
     @Override
     public byte[] downloadFile(String path) throws IOException {
         GetObjectRequest getObjectRequest = GetObjectRequest.builder()
