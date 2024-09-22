@@ -30,7 +30,7 @@ public class securityConfiguration {
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowedOrigins(Arrays.asList("http://amirhs.test", "https://stage.amirhs.de"));  // Allow specific origins
-                    config.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS"));
+                    config.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PUT", "OPTIONS"));
                     config.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
                     config.setAllowCredentials(true);
                     return config;
