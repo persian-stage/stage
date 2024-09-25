@@ -26,6 +26,7 @@ import java.util.Optional;
 public class UploadAvatarController {
 
     private static final Logger logger = LogManager.getLogger(UploadAvatarController.class);
+    public static final int MAXIMUM_IMAGE_UPLOAD = 5;
 
     private final StorageService storageService;
     private final UserService userService;
@@ -120,6 +121,12 @@ public class UploadAvatarController {
             logger.warn("User not found: {}", userDetails.getUsername());
             ResponseWrapper response = new ResponseWrapper()
                     .add("redirectUrl", "/login")
+                    .add("status", HttpStatus.FORBIDDEN.value() + "");
+            return ResponseEntity.ok(response);
+        }
+
+        if (currentUser.get().getProfile().getImages().size() >= MAXIMUM_IMAGE_UPLOAD) {
+            ResponseWrapper response = new ResponseWrapper()
                     .add("status", HttpStatus.FORBIDDEN.value() + "");
             return ResponseEntity.ok(response);
         }
