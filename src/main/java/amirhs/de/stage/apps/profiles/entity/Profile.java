@@ -33,9 +33,9 @@ public class Profile {
     @JsonManagedReference
     private List<Image> images = new ArrayList<>();
 
-    public void profile() {}
+    public Profile() {}
 
-    public void profile(User user) {
+    public Profile(User user) {
         this.user = user;
     }
 
